@@ -1,0 +1,198 @@
+diff --git a/loader/src/tx.rs b/loader/src/tx.rs
+index 6f2d281..2eecac9 100644
+--- a/loader/src/tx.rs
++++ b/loader/src/tx.rs
+@@ -835,6 +835,38 @@ pub fn validate_asset_sizes(assets: &TxAssets) -> Result<(), TxError> {
+ pub fn run_transaction(gpu: &TxGpu, assets: &TxAssets, pci_handle: uefi::Handle) -> Result<(), TxError> {
+     info!("TX: BEGIN (phases: detach claim pre-flr scrub gfw layout fwsec booter verify selectors restore flr)");
+ 
++    // Fail-closed TU10x geometry gate.  This is intentionally the first GPU
++    // access in the transaction: one BAR0 read only, before PMCSR writes,
++    // driver/GOP detach, PCI COMMAND changes, FLR, Falcon or DMA activity.
++    // The operator supplies an expected *capacity*, not an encoded register
++    // value; the live cold LMR is always decoded dynamically.
++    let gated_tu10x_fb_mib = if assets.family == "tu10x" {
++        const LOCAL_MEMORY_RANGE: u32 = 0x0010_0ce0;
++        let lmr = gpu.read32_raw(LOCAL_MEMORY_RANGE);
++        let decoded = crate::tx_fwsec::decode_tu10x_local_memory_range(lmr)
++            .ok_or_else(|| {
++                info!("GEOMETRY-GATE: cold LMR {lmr:#010x} is inaccessible or implausible; refusing before transaction");
++                TxError::EInval
++            })?;
++        let expected = read_asset("\\tu10x-expected-fb-mib.txt")
++            .ok()
++            .flatten()
++            .and_then(|b| core::str::from_utf8(&b).ok().map(str::trim).and_then(|s| s.parse::<u32>().ok()))
++            .filter(|mib| (256..=64 * 1024).contains(mib))
++            .ok_or_else(|| {
++                info!("GEOMETRY-GATE: missing/invalid \\tu10x-expected-fb-mib.txt; refusing before transaction");
++                TxError::EInval
++            })?;
++        if decoded != expected {
++            info!("GEOMETRY-GATE: decoded={decoded} MiB expected={expected} MiB (LMR={lmr:#010x}); refusing before transaction");
++            return Err(TxError::EInval);
++        }
++        info!("GEOMETRY-GATE: PASS LMR={lmr:#010x} decoded={decoded} MiB expected={expected} MiB (read-only, pre-transaction)");
++        Some(decoded)
++    } else {
++        None
++    };
++
+     // Experimental override (\tx-force-continue.txt): on a booter-stage
+     // failure, continue the unwind with a selector probe instead of
+     // aborting. Default OFF; see the FORCE-CONTINUE banner at the failure
+@@ -944,6 +976,13 @@ pub fn run_transaction(gpu: &TxGpu, assets: &TxAssets, pci_handle: uefi::Handle)
+     // refused: 84 MB > boot_offset - gsp_offset (EInval, 2026-10-26 log).
+     let gsp_image_size = assets.gsp_image.len() as u64;
+     let layout = crate::tx_fwsec::layout_from_registers(gpu, assets.family, gsp_image_size, boot_size)?;
++    if let Some(gated) = gated_tu10x_fb_mib {
++        let layout_mib = u32::try_from(layout.fb_size >> 20).map_err(|_| TxError::EInval)?;
++        if layout_mib != gated {
++            info!("GEOMETRY-GATE: TOCTOU/layout mismatch preflight={gated} MiB layout={layout_mib} MiB; refusing");
++            return Err(TxError::EInval);
++        }
++    }
+     info!("TX: layout ok (frts={:#x})", layout.frts_offset);
+ 
+     if assets.family == "tu10x" {
+diff --git a/loader/src/tx_fwsec.rs b/loader/src/tx_fwsec.rs
+index 4f199d4..e1e9ad0 100644
+--- a/loader/src/tx_fwsec.rs
++++ b/loader/src/tx_fwsec.rs
+@@ -354,6 +354,25 @@ pub struct LayoutOut {
+     pub nonwpr_start: u64,
+ }
+ 
++/// Decode TU10x NV_PFB_PRI_MMU_LOCAL_MEMORY_RANGE (0x100ce0) exactly as
++/// kmemsysReadUsableFbSize_GP102.  This function deliberately knows nothing
++/// about board marketing capacities: the live cold register is authoritative.
++pub fn decode_tu10x_local_memory_range(lmr: u32) -> Option<u32> {
++    if inaccessible(lmr) {
++        return None;
++    }
++    let mag = (lmr >> 4) & 0x3f;
++    let scale = lmr & 0xf;
++    let bytes = (mag as u64).checked_shl(scale + 20)?;
++    let bytes = if lmr & (1 << 30) != 0 {
++        bytes.checked_div(16)?.checked_mul(15)?
++    } else {
++        bytes
++    };
++    let mib = u32::try_from(bytes >> 20).ok()?;
++    (256..=64 * 1024).contains(&mib).then_some(mib)
++}
++
+ pub fn layout_from_registers(
+     gpu: &TxGpu,
+     family: &str,
+@@ -387,20 +406,9 @@ pub fn layout_from_registers(
+     // Decode, log, and never guess.
+     let fb_mib = if inaccessible(fb_raw) {
+         if family == "tu10x" {
+-            const FB_MIB_TU106_1F07: u32 = 8192;
+             const LOCAL_MEMORY_RANGE: u32 = 0x0010_0ce0;
+             let lmr = gpu.read32_raw(LOCAL_MEMORY_RANGE);
+-            let decoded_mib = if !inaccessible(lmr) {
+-                let mag = (lmr >> 4) & 0x3f; // [9:4] LOWER_MAG
+-                let scale = lmr & 0xf; // [3:0]
+-                let bytes = (mag as u64) << (scale + 20);
+-                let bytes = if lmr & (1 << 30) != 0 { bytes / 16 * 15 } else { bytes };
+-                let mib = (bytes >> 20) as u32;
+-                (mib >= 256 && mib <= 64 * 1024).then_some(mib)
+-            } else {
+-                None
+-            };
+-            match decoded_mib {
++            match decode_tu10x_local_memory_range(lmr) {
+                 Some(mib) => {
+                     info!(
+                         "layout: LOCAL_MEMORY_RANGE {lmr:#010x} decoded usable FB = {mib} MiB (ecc={}) - driver source",
+@@ -409,28 +417,11 @@ pub fn layout_from_registers(
+                     mib
+                 }
+                 None => {
+-                    // \tu10x-fb-gb.txt override (issue #17): manual escape
+-                    // hatch when the register decode is gated or implausible.
+-                    // Plain decimal GiB; everything downstream (vga/frts/wpr/
+-                    // heap) keys off this one number.
+-                    let override_mib = crate::tx::read_boot_file("\\tu10x-fb-gb.txt")
+-                        .and_then(|b| core::str::from_utf8(&b).ok().map(str::trim).and_then(|s| s.parse::<u64>().ok()))
+-                        .filter(|g| *g >= 1 && *g <= 64);
+-                    match override_mib {
+-                        Some(gib) => {
+-                            info!("layout: \\tu10x-fb-gb.txt override: FB size = {gib} GiB (register decode skipped: {lmr:#010x})");
+-                            (gib * 1024) as u32
+-                        }
+-                        None => {
+-                            // Config 0x00 = vendor|device<<16; print the id so a
+-                            // field log identifies the SKU without the marker.
+-                            let dev = (gpu.pci.config_read_u32(0) >> 16) as u16;
+-                            info!(
+-                                "layout: FB_SIZE_MIB PLM-locked on Turing ({fb_raw:#010x}), LOCAL_MEMORY_RANGE {lmr:#010x} undecodable on 10de:{dev:04x} - no driver-exact FB source; defaulting to 8192 MiB - write \\tu10x-fb-gb.txt (GiB) or extend the fallback with a measured card"
+-                            );
+-                            FB_MIB_TU106_1F07
+-                        }
+-                    }
++                    let dev = (gpu.pci.config_read_u32(0) >> 16) as u16;
++                    info!(
++                        "GEOMETRY-GATE: LOCAL_MEMORY_RANGE {lmr:#010x} undecodable on 10de:{dev:04x}; refusing transaction (no override, no fallback)"
++                    );
++                    return Err(TxError::EInval);
+                 }
+             }
+         } else {
+diff --git a/sim/src/layout.rs b/sim/src/layout.rs
+index d7db693..ba8ef52 100644
+--- a/sim/src/layout.rs
++++ b/sim/src/layout.rs
+@@ -43,6 +43,23 @@ pub enum LayoutError {
+     EnODEV,
+ }
+ 
++/// Pure host-test twin of the loader's TU10x LMR decoder.
++pub fn decode_tu10x_local_memory_range(lmr: u32) -> Option<u32> {
++    if matches!(lmr, 0 | u32::MAX) || lmr & 0xffff_0000 == 0xbadf_0000 {
++        return None;
++    }
++    let mag = (lmr >> 4) & 0x3f;
++    let scale = lmr & 0xf;
++    let bytes = (mag as u64).checked_shl(scale + 20)?;
++    let bytes = if lmr & (1 << 30) != 0 {
++        bytes.checked_div(16)?.checked_mul(15)?
++    } else {
++        bytes
++    };
++    let mib = u32::try_from(bytes >> 20).ok()?;
++    (256..=64 * 1024).contains(&mib).then_some(mib)
++}
++
+ fn align_down(v: u64, align: u64) -> Option<u64> {
+     if align == 0 || align & (align - 1) != 0 || v < align {
+         return None;
+@@ -267,4 +284,26 @@ mod tests {
+         assert!(o.boot_offset <= o.frts_offset - BOOT);
+         assert!(o.gsp_offset + IMAGE <= o.boot_offset);
+     }
++
++    #[test]
++    fn tu10x_lmr_known_22g_decodes_without_hardcoded_capacity() {
++        assert_eq!(decode_tu10x_local_memory_range(0x2c9), Some(22 * 1024));
++    }
++
++    #[test]
++    fn tu10x_lmr_known_8g_decodes() {
++        assert_eq!(decode_tu10x_local_memory_range(0x208), Some(8 * 1024));
++    }
++
++    #[test]
++    fn tu10x_lmr_ecc_applies_fifteen_sixteenths() {
++        assert_eq!(decode_tu10x_local_memory_range((1 << 30) | 0x208), Some(7680));
++    }
++
++    #[test]
++    fn tu10x_lmr_poison_and_implausible_values_fail_closed() {
++        for raw in [0, u32::MAX, 0xbadf_5040, 0xbadf_1100, 0x001] {
++            assert_eq!(decode_tu10x_local_memory_range(raw), None, "raw={raw:#x}");
++        }
++    }
+ }

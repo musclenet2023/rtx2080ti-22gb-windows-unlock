@@ -1,0 +1,19 @@
+# Rebuild recipe recorded from the 2026-11-03 sampler build.
+# Do not run automatically; this file is documentation only.
+
+# 1. Obtain the main repository at the saved commit and apply the saved safety patch.
+git clone https://github.com/physicsdolphin/nv-uefi-unlocker.git
+git -C nv-uefi-unlocker checkout dcfb5352f0ee3797de97ea0156f56f1145176d22
+git -C nv-uefi-unlocker apply GOLDEN_BACKUP_2080TI_20261103/metadata/fail_closed_geometry_gate.patch
+
+# 2. Copy this archive's sampler/cold-lmr-sampler directory into the repository,
+#    replace the workspace Cargo.toml/Cargo.lock and .cargo/config.toml with the
+#    saved sampler versions, then build without the tx feature.
+$env:CARGO_TARGET_DIR='C:\GPU_UNLOCK_TEST\toolchain\build-target-uefi-gnu'
+Set-Location 'C:\path\to\nv-uefi-unlocker'
+cargo build --release -p cold-lmr-sampler --target x86_64-unknown-uefi
+
+# Historical output path:
+# C:\GPU_UNLOCK_TEST\toolchain\build-target-uefi-gnu\x86_64-unknown-uefi\release\cold-lmr-sampler.efi
+
+The source build is read-only: PCI config reads and one BAR0 read at 0x100ce0 only.

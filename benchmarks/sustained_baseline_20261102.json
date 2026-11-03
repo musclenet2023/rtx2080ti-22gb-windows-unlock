@@ -1,0 +1,830 @@
+{
+  "timestamp": "2026-11-02T22:32:06.782143+08:00",
+  "gpu": "NVIDIA GeForce RTX 2080 Ti",
+  "torch": "2.14.1+cu126",
+  "torch_cuda": "12.6",
+  "cudnn": 91002,
+  "duration_target_s": 10.0,
+  "repeats": 3,
+  "method_note": "Modes use torch.backends.cuda.matmul.allow_fp16_accumulation. This records the requested PyTorch/cuBLAS policy, not an independent CUPTI or cuBLAS API trace proving every selected kernel's accumulator type.",
+  "results": [
+    {
+      "mode": "fp16_input_fp32_accum_requested",
+      "matrix_n": 4096,
+      "torch_dtype": "torch.float16",
+      "allow_fp16_accumulation": false,
+      "runs": [
+        {
+          "iterations": 4968,
+          "gpu_elapsed_s": 12.5942919921875,
+          "wall_elapsed_s": 12.799219599997741,
+          "sustained_tflops": 54.21477612814193,
+          "telemetry": {
+            "sample_count": 61,
+            "temperature_c": {
+              "min": 32.0,
+              "median": 41.0,
+              "max": 44.0
+            },
+            "power_w": {
+              "min": 78.28,
+              "median": 245.46,
+              "max": 250.46
+            },
+            "sm_clock_mhz": {
+              "min": 1350.0,
+              "median": 1770.0,
+              "max": 1920.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 10.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000000",
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 4937,
+          "gpu_elapsed_s": 12.5935400390625,
+          "wall_elapsed_s": 12.650829199999862,
+          "sustained_tflops": 53.879696351191825,
+          "telemetry": {
+            "sample_count": 61,
+            "temperature_c": {
+              "min": 43.0,
+              "median": 45.0,
+              "max": 47.0
+            },
+            "power_w": {
+              "min": 171.83,
+              "median": 244.38,
+              "max": 252.23
+            },
+            "sm_clock_mhz": {
+              "min": 1740.0,
+              "median": 1755.0,
+              "max": 1875.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 80.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 4915,
+          "gpu_elapsed_s": 12.6244404296875,
+          "wall_elapsed_s": 12.669602699999814,
+          "sustained_tflops": 53.508308750568624,
+          "telemetry": {
+            "sample_count": 61,
+            "temperature_c": {
+              "min": 47.0,
+              "median": 48.0,
+              "max": 49.0
+            },
+            "power_w": {
+              "min": 207.45,
+              "median": 244.56,
+              "max": 250.78
+            },
+            "sm_clock_mhz": {
+              "min": 1725.0,
+              "median": 1740.0,
+              "max": 1860.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 94.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000004"
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "median_tflops": 53.879696351191825,
+        "min_tflops": 53.508308750568624,
+        "max_tflops": 54.21477612814193,
+        "pstdev_tflops": 0.2885410354780852,
+        "coefficient_of_variation_percent": 0.5356486440680662
+      }
+    },
+    {
+      "mode": "fp16_input_fp32_accum_requested",
+      "matrix_n": 8192,
+      "torch_dtype": "torch.float16",
+      "allow_fp16_accumulation": false,
+      "runs": [
+        {
+          "iterations": 1012,
+          "gpu_elapsed_s": 20.1954375,
+          "wall_elapsed_s": 20.21482979999564,
+          "sustained_tflops": 55.09688845855961,
+          "telemetry": {
+            "sample_count": 97,
+            "temperature_c": {
+              "min": 49.0,
+              "median": 50.0,
+              "max": 51.0
+            },
+            "power_w": {
+              "min": 236.35,
+              "median": 242.55,
+              "max": 251.99
+            },
+            "sm_clock_mhz": {
+              "min": 1695.0,
+              "median": 1710.0,
+              "max": 1740.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 95.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 1011,
+          "gpu_elapsed_s": 20.217107421875,
+          "wall_elapsed_s": 20.276858400000492,
+          "sustained_tflops": 54.983447062203034,
+          "telemetry": {
+            "sample_count": 97,
+            "temperature_c": {
+              "min": 50.0,
+              "median": 51.0,
+              "max": 52.0
+            },
+            "power_w": {
+              "min": 170.98,
+              "median": 242.84,
+              "max": 252.36
+            },
+            "sm_clock_mhz": {
+              "min": 1695.0,
+              "median": 1710.0,
+              "max": 1875.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 98.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 1011,
+          "gpu_elapsed_s": 20.228,
+          "wall_elapsed_s": 20.345080599996436,
+          "sustained_tflops": 54.953839019257266,
+          "telemetry": {
+            "sample_count": 97,
+            "temperature_c": {
+              "min": 50.0,
+              "median": 52.0,
+              "max": 52.0
+            },
+            "power_w": {
+              "min": 143.07,
+              "median": 243.18,
+              "max": 252.64
+            },
+            "sm_clock_mhz": {
+              "min": 1695.0,
+              "median": 1710.0,
+              "max": 1905.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 94.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000000",
+              "0x0000000000000004"
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "median_tflops": 54.983447062203034,
+        "min_tflops": 54.953839019257266,
+        "max_tflops": 55.09688845855961,
+        "pstdev_tflops": 0.061652006094353576,
+        "coefficient_of_variation_percent": 0.11207134449490028
+      }
+    },
+    {
+      "mode": "fp16_input_fp16_accum_requested",
+      "matrix_n": 4096,
+      "torch_dtype": "torch.float16",
+      "allow_fp16_accumulation": true,
+      "runs": [
+        {
+          "iterations": 7074,
+          "gpu_elapsed_s": 11.6895693359375,
+          "wall_elapsed_s": 11.83874890000152,
+          "sustained_tflops": 83.17185423349511,
+          "telemetry": {
+            "sample_count": 57,
+            "temperature_c": {
+              "min": 52.0,
+              "median": 52.0,
+              "max": 52.0
+            },
+            "power_w": {
+              "min": 76.46,
+              "median": 239.32,
+              "max": 248.68
+            },
+            "sm_clock_mhz": {
+              "min": 1395.0,
+              "median": 1500.0,
+              "max": 1905.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 87.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000000",
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 7067,
+          "gpu_elapsed_s": 11.683537109375,
+          "wall_elapsed_s": 11.792437800002517,
+          "sustained_tflops": 83.13245167914582,
+          "telemetry": {
+            "sample_count": 57,
+            "temperature_c": {
+              "min": 51.0,
+              "median": 52.0,
+              "max": 52.0
+            },
+            "power_w": {
+              "min": 76.46,
+              "median": 239.38,
+              "max": 244.84
+            },
+            "sm_clock_mhz": {
+              "min": 1455.0,
+              "median": 1500.0,
+              "max": 1905.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 85.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 7072,
+          "gpu_elapsed_s": 11.6882724609375,
+          "wall_elapsed_s": 11.877517600005376,
+          "sustained_tflops": 83.15756517503561,
+          "telemetry": {
+            "sample_count": 57,
+            "temperature_c": {
+              "min": 51.0,
+              "median": 52.0,
+              "max": 52.0
+            },
+            "power_w": {
+              "min": 79.17,
+              "median": 239.19,
+              "max": 250.29
+            },
+            "sm_clock_mhz": {
+              "min": 1470.0,
+              "median": 1500.0,
+              "max": 1905.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 89.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000000",
+              "0x0000000000000004"
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "median_tflops": 83.15756517503561,
+        "min_tflops": 83.13245167914582,
+        "max_tflops": 83.17185423349511,
+        "pstdev_tflops": 0.016287098359386257,
+        "coefficient_of_variation_percent": 0.019586678663604605
+      }
+    },
+    {
+      "mode": "fp16_input_fp16_accum_requested",
+      "matrix_n": 8192,
+      "torch_dtype": "torch.float16",
+      "allow_fp16_accumulation": true,
+      "runs": [
+        {
+          "iterations": 1273,
+          "gpu_elapsed_s": 16.696615234375,
+          "wall_elapsed_s": 16.819959599997674,
+          "sustained_tflops": 83.83006271098526,
+          "telemetry": {
+            "sample_count": 81,
+            "temperature_c": {
+              "min": 51.0,
+              "median": 51.0,
+              "max": 52.0
+            },
+            "power_w": {
+              "min": 193.31,
+              "median": 239.06,
+              "max": 285.17
+            },
+            "sm_clock_mhz": {
+              "min": 1440.0,
+              "median": 1455.0,
+              "max": 1905.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 81.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000000",
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 1273,
+          "gpu_elapsed_s": 16.704791015625,
+          "wall_elapsed_s": 16.902551799998037,
+          "sustained_tflops": 83.78903398729409,
+          "telemetry": {
+            "sample_count": 81,
+            "temperature_c": {
+              "min": 51.0,
+              "median": 52.0,
+              "max": 52.0
+            },
+            "power_w": {
+              "min": 78.31,
+              "median": 238.77,
+              "max": 305.46
+            },
+            "sm_clock_mhz": {
+              "min": 1425.0,
+              "median": 1455.0,
+              "max": 1905.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 92.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000000",
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 1272,
+          "gpu_elapsed_s": 16.703125,
+          "wall_elapsed_s": 16.8815082000001,
+          "sustained_tflops": 83.73156463422696,
+          "telemetry": {
+            "sample_count": 81,
+            "temperature_c": {
+              "min": 51.0,
+              "median": 52.0,
+              "max": 52.0
+            },
+            "power_w": {
+              "min": 93.09,
+              "median": 238.39,
+              "max": 244.5
+            },
+            "sm_clock_mhz": {
+              "min": 1425.0,
+              "median": 1455.0,
+              "max": 1905.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 81.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000000",
+              "0x0000000000000004"
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "median_tflops": 83.78903398729409,
+        "min_tflops": 83.73156463422696,
+        "max_tflops": 83.83006271098526,
+        "pstdev_tflops": 0.04039795626674146,
+        "coefficient_of_variation_percent": 0.04821704791136382
+      }
+    },
+    {
+      "mode": "fp32",
+      "matrix_n": 4096,
+      "torch_dtype": "torch.float32",
+      "allow_fp16_accumulation": null,
+      "runs": [
+        {
+          "iterations": 1905,
+          "gpu_elapsed_s": 21.531216796875,
+          "wall_elapsed_s": 21.55719880000106,
+          "sustained_tflops": 12.160074780453664,
+          "telemetry": {
+            "sample_count": 104,
+            "temperature_c": {
+              "min": 52.0,
+              "median": 52.0,
+              "max": 53.0
+            },
+            "power_w": {
+              "min": 231.88,
+              "median": 240.885,
+              "max": 269.59
+            },
+            "sm_clock_mhz": {
+              "min": 1545.0,
+              "median": 1560.0,
+              "max": 1665.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 82.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 1908,
+          "gpu_elapsed_s": 21.54829296875,
+          "wall_elapsed_s": 21.653679099996225,
+          "sustained_tflops": 12.169572949693748,
+          "telemetry": {
+            "sample_count": 104,
+            "temperature_c": {
+              "min": 52.0,
+              "median": 53.0,
+              "max": 53.0
+            },
+            "power_w": {
+              "min": 167.69,
+              "median": 239.325,
+              "max": 251.13
+            },
+            "sm_clock_mhz": {
+              "min": 1545.0,
+              "median": 1560.0,
+              "max": 1905.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 97.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 1905,
+          "gpu_elapsed_s": 21.52293359375,
+          "wall_elapsed_s": 21.728807899999083,
+          "sustained_tflops": 12.164754642935371,
+          "telemetry": {
+            "sample_count": 104,
+            "temperature_c": {
+              "min": 52.0,
+              "median": 53.0,
+              "max": 53.0
+            },
+            "power_w": {
+              "min": 79.58,
+              "median": 240.26,
+              "max": 248.54
+            },
+            "sm_clock_mhz": {
+              "min": 1545.0,
+              "median": 1560.0,
+              "max": 1905.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 90.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000000",
+              "0x0000000000000004"
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "median_tflops": 12.164754642935371,
+        "min_tflops": 12.160074780453664,
+        "max_tflops": 12.169572949693748,
+        "pstdev_tflops": 0.003877748656383937,
+        "coefficient_of_variation_percent": 0.03187679537871308
+      }
+    },
+    {
+      "mode": "fp32",
+      "matrix_n": 8192,
+      "torch_dtype": "torch.float32",
+      "allow_fp16_accumulation": null,
+      "runs": [
+        {
+          "iterations": 1138,
+          "gpu_elapsed_s": 99.193640625,
+          "wall_elapsed_s": 99.2520164000016,
+          "sustained_tflops": 12.614157767829061,
+          "telemetry": {
+            "sample_count": 472,
+            "temperature_c": {
+              "min": 52.0,
+              "median": 53.0,
+              "max": 53.0
+            },
+            "power_w": {
+              "min": 234.36,
+              "median": 240.17,
+              "max": 251.34
+            },
+            "sm_clock_mhz": {
+              "min": 1560.0,
+              "median": 1590.0,
+              "max": 1815.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 80.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 1136,
+          "gpu_elapsed_s": 99.3565625,
+          "wall_elapsed_s": 99.38318209999852,
+          "sustained_tflops": 12.571340812576281,
+          "telemetry": {
+            "sample_count": 472,
+            "temperature_c": {
+              "min": 52.0,
+              "median": 53.0,
+              "max": 53.0
+            },
+            "power_w": {
+              "min": 233.72,
+              "median": 239.91,
+              "max": 248.63
+            },
+            "sm_clock_mhz": {
+              "min": 1560.0,
+              "median": 1590.0,
+              "max": 1635.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 94.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000004"
+            ]
+          }
+        },
+        {
+          "iterations": 1136,
+          "gpu_elapsed_s": 99.3713359375,
+          "wall_elapsed_s": 99.4307947999987,
+          "sustained_tflops": 12.569471843863788,
+          "telemetry": {
+            "sample_count": 472,
+            "temperature_c": {
+              "min": 51.0,
+              "median": 52.0,
+              "max": 53.0
+            },
+            "power_w": {
+              "min": 202.47,
+              "median": 239.87,
+              "max": 249.77
+            },
+            "sm_clock_mhz": {
+              "min": 1560.0,
+              "median": 1590.0,
+              "max": 1830.0
+            },
+            "memory_clock_mhz": {
+              "min": 6800.0,
+              "median": 6800.0,
+              "max": 6800.0
+            },
+            "gpu_util_percent": {
+              "min": 98.0,
+              "median": 100.0,
+              "max": 100.0
+            },
+            "pstates": [
+              "P2"
+            ],
+            "active_clock_event_reasons": [
+              "0x0000000000000004"
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "median_tflops": 12.571340812576281,
+        "min_tflops": 12.569471843863788,
+        "max_tflops": 12.614157767829061,
+        "pstdev_tflops": 0.02063873516203361,
+        "coefficient_of_variation_percent": 0.16399484568606815
+      }
+    }
+  ]
+}

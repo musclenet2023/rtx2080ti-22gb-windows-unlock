@@ -1,0 +1,7 @@
+Original source directory: C:\Users\muscl\geometry_gate_worktree\cold-lmr-sampler
+Original build target: C:\GPU_UNLOCK_TEST\toolchain\build-target-uefi-gnu\x86_64-unknown-uefi\release\cold-lmr-sampler.efi
+Original output copy: C:\GPU_UNLOCK_TEST\uefi_staging\sampler-backup-20261103.efi
+Original EFI size: 17920 bytes
+Original EFI SHA-256: 7550C6EA3AE40600F176AC5BA8779C6B634FCFABA85AB280B0CF2B8F240C6A82
+Source worktree commit: dcfb5352f0ee3797de97ea0156f56f1145176d22
+The source worktree was dirty because it was a geometry-gate worktree; the standalone sampler sources and Cargo files are copied here explicitly.
